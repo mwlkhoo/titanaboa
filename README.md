@@ -1,2 +1,3 @@
 # titanaboa
-Titanaboa motion control
+Motion control for eatART's Titanaboa
+
