@@ -18,10 +18,10 @@
 // We are using an interrupt for the PID. this interrupt could come in any time, possibly in the middle
 // of communication. To ensure that we don't lose data, make the serial buffer size larger than the packets.
 #include "HardwareSerial.cpp"
-#if SERIAL_BUFFER_SIZE != 128
-  #error "ERROR: Serial buffer must be 128 bytes. Please modify your arduino program files."
-  // Arduino Folder\hardware\arduino\cores\arduino
-#endif 
+//#if SERIAL_BUFFER_SIZE != 128
+//  #error "ERROR: Serial buffer must be 128 bytes. Please modify your arduino program files."
+//  // Arduino Folder\hardware\arduino\cores\arduino
+//#endif 
 
 #include <EEPROM.h>
 #include <avr/pgmspace.h>
@@ -30,6 +30,7 @@
 #include "OneWireNXP.h"
 #include "MemoryFree.h"
 
+typedef unsigned char prog_uchar;
 
 // Defines and constants
 #define HEAD_SERIAL Serial1             // Serial to the upstream module
@@ -1860,7 +1861,7 @@ boolean runSerialChainCommunicationTest()
     // If we didn't recieve 't' from the last module.
     if (!error && !gotLastModuleT)
     {
-      static prog_uchar toPrint[] PROGMEM = "ERROR: Did not recieve 't' from the last module. Is the serial terminator plugged in?\n";
+      static const prog_uchar toPrint[] PROGMEM = "ERROR: Did not recieve 't' from the last module. Is the serial terminator plugged in?\n";
       printProgMemString(toPrint);
       error = true;
     }
@@ -1872,12 +1873,12 @@ boolean runSerialChainCommunicationTest()
   // Give the result of the tests
   if (numberOfErrors > 0)
   {
-    static prog_uchar toPrint[] PROGMEM = "RESULT: ERROR! Some serial chain communication tests failed.\n\n";
+    static const prog_uchar toPrint[] PROGMEM = "RESULT: ERROR! Some serial chain communication tests failed.\n\n";
     printProgMemString(toPrint);
   }
   else
   {
-    static prog_uchar toPrint[] PROGMEM = "RESULT: SUCCESS! All serial chain communication tests passed.\n\n";
+    static const prog_uchar toPrint[] PROGMEM = "RESULT: SUCCESS! All serial chain communication tests passed.\n\n";
     printProgMemString(toPrint);
   }
   delay(500);
@@ -1963,12 +1964,12 @@ boolean runRS485CommunicationTest()
   // Give the result of the tests
   if (numberOfErrors > 0)
   {
-    static prog_uchar toPrint[] PROGMEM = "RESULT: ERROR! Some RS-485 communication tests failed.\n\n";
+    static const prog_uchar toPrint[] PROGMEM = "RESULT: ERROR! Some RS-485 communication tests failed.\n\n";
     printProgMemString(toPrint);
   }
   else
   {
-    static prog_uchar toPrint[] PROGMEM = "RESULT: SUCCESS! All RS-485 communication tests passed.\n\n";
+    static const prog_uchar toPrint[] PROGMEM = "RESULT: SUCCESS! All RS-485 communication tests passed.\n\n";
     printProgMemString(toPrint);
   }
   delay(500);
@@ -1990,17 +1991,17 @@ void manualTurnMotorOn()
   switch (speedSelect)
   {
     case '1':
-      static prog_uchar toPrint1[] PROGMEM = "Motor running at speed 80 (SEND 's' TO TURN OFF).\n";
+      static const prog_uchar toPrint1[] PROGMEM = "Motor running at speed 80 (SEND 's' TO TURN OFF).\n";
       printProgMemString(toPrint1);
       analogWrite(MOTOR_CONTROL, 80);      
       break;
     case '2':
-      static prog_uchar toPrint2[] PROGMEM = "Motor running at speed 160 (SEND 's' TO TURN OFF).\n";
+      static const prog_uchar toPrint2[] PROGMEM = "Motor running at speed 160 (SEND 's' TO TURN OFF).\n";
       printProgMemString(toPrint2);
       analogWrite(MOTOR_CONTROL, 160);  
       break;
     case '3':
-      static prog_uchar toPrint3[] PROGMEM = "Motor running at speed 240 (SEND 's' TO TURN OFF).\n";
+      static const prog_uchar toPrint3[] PROGMEM = "Motor running at speed 240 (SEND 's' TO TURN OFF).\n";
       printProgMemString(toPrint3);
       analogWrite(MOTOR_CONTROL, 240);      
       break;    
@@ -2195,7 +2196,7 @@ void manualPrintFreeMemory()
  *************************************************************************************/
 void displayMenu()
 {  
-  static prog_uchar menu[] PROGMEM =
+  static const prog_uchar menu[] PROGMEM =
     "\nManual Control Mode\n"                
     "commands: 1-5 to select vertebrae\n"                
     "          k/l - horizontal actuation - extend/contract\n"                
@@ -2373,10 +2374,3 @@ void stopMovement()
   analogWrite(MOTOR_CONTROL, 0);
   return;
 }
-
-
-
-
-
-
-
